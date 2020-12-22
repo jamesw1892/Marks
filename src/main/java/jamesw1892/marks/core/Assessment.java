@@ -44,6 +44,10 @@ public class Assessment {
 		return this.mark;
 	}
 
+	public String getMarkStr() {
+		return Format.percentageNull(this.getMark());
+	}
+
 	public void setMark(Float mark) {
 		if (mark != null && (mark < 0 || mark > 1)) {
 			throw new IllegalArgumentException("mark should be between 0 and 1 inclusive or null");

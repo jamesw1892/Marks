@@ -49,6 +49,10 @@ public class Course {
 		return mark;
     }
 
+	public String getMarkCurrentStr() {
+		return Format.percentageNotNull(this.getMarkCurrent());
+	}
+
     /**
      * Average mark which is null if nothing has been completed yet,
      * otherwise the current mark divided by how much has been completed.
@@ -62,6 +66,10 @@ public class Course {
         return this.getMarkCurrent() / complete;
     }
 
+	public String getMarkAverageStr() {
+		return Format.percentageNull(this.getMarkAverage());
+	}
+
     /**
      * Weight of the course completed - sum of weighted completeness
      * of all years in the course. Between 0 and 1
@@ -74,18 +82,9 @@ public class Course {
 		return complete;
     }
 
-    public String getCompleteStr() {
-        return String.valueOf(this.getComplete() * 100) + "%";
-    }
-
-    public String getMarkAverageStr() {
-        Float averageMark = this.getMarkAverage();
-        if (averageMark == null) {
-            return "Unknown";
-        }
-        DecimalFormat decimalFormat = new DecimalFormat("0%");
-        return String.valueOf(decimalFormat.format(averageMark * 100));
-    }
+	public String getCompleteStr() {
+		return Format.percentageNotNull(this.getComplete());
+	}
 
     public String getGradeAverage(GradeBoundary gradeBoundary) {
         return gradeBoundary.getGrade(this.getMarkAverage());

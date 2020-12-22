@@ -67,6 +67,10 @@ public class Module {
 		return mark;
 	}
 
+	public String getMarkCurrentStr() {
+		return Format.percentageNotNull(this.getMarkCurrent());
+	}
+
 	/**
 	 * We say the average mark is null if nothing has been completed yet
 	 * otherwise it is the current mark divided by how much has been completed.
@@ -78,6 +82,10 @@ public class Module {
 			return null;
 		}
 		return this.getMarkCurrent() / complete;
+	}
+
+	public String getMarkAverageStr() {
+		return Format.percentageNull(this.getMarkAverage());
 	}
 
 	/**
@@ -92,6 +100,10 @@ public class Module {
 			}
 		}
 		return complete;
+	}
+
+	public String getCompleteStr() {
+		return Format.percentageNotNull(this.getComplete());
 	}
 
 	public String getGradeAverage(GradeBoundary gradeBoundary) {

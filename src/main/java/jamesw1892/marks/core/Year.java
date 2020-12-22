@@ -53,6 +53,10 @@ public class Year {
 		return mark;
 	}
 
+	public String getMarkCurrentStr() {
+		return Format.percentageNotNull(this.getMarkCurrent());
+	}
+
 	/**
 	 * Average mark which is null if nothing has been completed yet,
 	 * otherwise the current mark divided by how much has been completed.
@@ -64,6 +68,10 @@ public class Year {
 			return null;
 		}
 		return this.getMarkCurrent() / complete;
+	}
+
+	public String getMarkAverageStr() {
+		return Format.percentageNull(this.getMarkAverage());
 	}
 
 	/**
@@ -84,6 +92,10 @@ public class Year {
 			complete += module.getComplete() * this.getModuleWeight(module);
 		}
 		return complete;
+	}
+
+	public String getCompleteStr() {
+		return Format.percentageNotNull(this.getComplete());
 	}
 
 	/**
