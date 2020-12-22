@@ -1,7 +1,5 @@
 package jamesw1892.marks.core;
 
-import java.text.DecimalFormat;
-
 public class Course {
     private String name;
     private String description;
@@ -25,17 +23,17 @@ public class Course {
         return this.years;
     }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public void setYears(Year[] years) {
-		this.years = years;
-	}
+    public void setYears(Year[] years) {
+        this.years = years;
+    }
 
     /**
      * Get the current mark of this course - the sum of the
@@ -43,15 +41,15 @@ public class Course {
      */
     public float getMarkCurrent() {
         float mark = 0.0f;
-		for (Year year: this.years) {
+        for (Year year: this.years) {
             mark += year.getMarkCurrent() * year.getWeightOfCoursePercent();
-		}
-		return mark;
+        }
+        return mark;
     }
 
-	public String getMarkCurrentStr() {
-		return Format.percentageNotNull(this.getMarkCurrent());
-	}
+    public String getMarkCurrentStr() {
+        return Format.percentageNotNull(this.getMarkCurrent());
+    }
 
     /**
      * Average mark which is null if nothing has been completed yet,
@@ -66,9 +64,9 @@ public class Course {
         return this.getMarkCurrent() / complete;
     }
 
-	public String getMarkAverageStr() {
-		return Format.percentageNull(this.getMarkAverage());
-	}
+    public String getMarkAverageStr() {
+        return Format.percentageNull(this.getMarkAverage());
+    }
 
     /**
      * Weight of the course completed - sum of weighted completeness
@@ -76,15 +74,15 @@ public class Course {
      */
     public float getComplete() {
         float complete = 0.0f;
-		for (Year year: this.years) {
+        for (Year year: this.years) {
             complete += year.getComplete() * year.getWeightOfCoursePercent();
-		}
-		return complete;
+        }
+        return complete;
     }
 
-	public String getCompleteStr() {
-		return Format.percentageNotNull(this.getComplete());
-	}
+    public String getCompleteStr() {
+        return Format.percentageNotNull(this.getComplete());
+    }
 
     public String getGradeAverage(GradeBoundary gradeBoundary) {
         return gradeBoundary.getGrade(this.getMarkAverage());

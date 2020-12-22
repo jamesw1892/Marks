@@ -13,49 +13,49 @@ public class Assessment {
         this.setMark(mark);
     }
 
-	public String getName() {
-		return this.name;
+    public String getName() {
+        return this.name;
     }
 
-	public void setName(String name) {
-		this.name = name;
+    public void setName(String name) {
+        this.name = name;
     }
 
-	public String getNotes() {
-		return this.notes;
+    public String getNotes() {
+        return this.notes;
     }
 
-	public void setNotes(String notes) {
-		this.notes = notes;
-	}
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
 
-	public float getWeightOfModule() {
-		return this.weightOfModule;
-	}
+    public float getWeightOfModule() {
+        return this.weightOfModule;
+    }
 
-	public void setWeightOfModule(float weightOfModule) {
-		if (weightOfModule < 0 || weightOfModule > 1) {
-			throw new IllegalArgumentException("weightOfModule should be between 0 and 1 inclusive");
-		}
-		this.weightOfModule = weightOfModule;
-	}
+    public void setWeightOfModule(float weightOfModule) {
+        if (weightOfModule < 0 || weightOfModule > 1) {
+            throw new IllegalArgumentException("weightOfModule should be between 0 and 1 inclusive");
+        }
+        this.weightOfModule = weightOfModule;
+    }
 
-	public Float getMark() {
-		return this.mark;
-	}
+    public Float getMark() {
+        return this.mark;
+    }
 
-	public String getMarkStr() {
-		return Format.percentageNull(this.getMark());
-	}
+    public String getMarkStr() {
+        return Format.percentageNull(this.getMark());
+    }
 
-	public void setMark(Float mark) {
-		if (mark != null && (mark < 0 || mark > 1)) {
-			throw new IllegalArgumentException("mark should be between 0 and 1 inclusive or null");
-		}
-		this.mark = mark;
-	}
+    public void setMark(Float mark) {
+        if (mark != null && (mark < 0 || mark > 1)) {
+            throw new IllegalArgumentException("mark should be between 0 and 1 inclusive or null");
+        }
+        this.mark = mark;
+    }
 
-	public String getGrade(GradeBoundary gradeBoundary) {
-		return gradeBoundary.getGrade(this.mark);
-	}
+    public String getGrade(GradeBoundary gradeBoundary) {
+        return gradeBoundary.getGrade(this.mark);
+    }
 }
