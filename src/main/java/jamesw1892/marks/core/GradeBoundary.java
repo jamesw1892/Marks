@@ -27,4 +27,8 @@ public class GradeBoundary {
         }
         return grade.getName();
     }
+
+    public TreeSet<Grade> getGrades() {
+        return this.grades;
+    }
 }
