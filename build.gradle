@@ -1,7 +1,8 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
-mainClassName = 'jamesw1892.marks.cli.Input'
+// mainClassName = 'jamesw1892.marks.excel.HardCodedExample'
+mainClassName = 'jamesw1892.marks.excel.Input2Excel'
 
 repositories {
     mavenCentral()
@@ -11,7 +12,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
-    compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.15'
+    compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.15' // excel
     testImplementation 'junit:junit:4.12'
 }
 

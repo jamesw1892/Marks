@@ -9,11 +9,89 @@ import jamesw1892.marks.core.Assessment;
 
 public class Input {
 
-    private static Year inputYear(Scanner scanner, int yearNum) {
-        return new Year(yearNum, "", 0.0f, new Module[0]);
+    private static Assessment inputAssessment(Scanner scanner, int assessmentNum, String moduleName) {
+
+        System.out.println(String.format("%sASSESSMENT %d in year %s:", System.lineSeparator(), assessmentNum, moduleName));
+
+        System.out.print("Name: ");
+        String name = scanner.nextLine();
+
+        System.out.print("Weight relative to module (between 0 and 1): ");
+        float weightOfModule = scanner.nextFloat();
+        scanner = new Scanner(System.in);
+
+        System.out.println("Notes:");
+        String notes = scanner.nextLine();
+
+        Float mark;
+        System.out.print("Do you already know the mark? ");
+        if (scanner.nextBoolean()) {
+            scanner = new Scanner(System.in);
+            System.out.print("Mark (between 0 and 1): ");
+            mark = scanner.nextFloat();
+        } else {
+            mark = null;
+        }
+
+        return new Assessment(name, weightOfModule, notes, mark);
     }
 
-    private static Course inputCourse(Scanner scanner) {
+    private static Module inputModule(Scanner scanner, int moduleNum, int yearNum) {
+
+        System.out.println(String.format("%sMODULE %d in year %d:", System.lineSeparator(), moduleNum, yearNum));
+
+        System.out.print("Module Name: ");
+        String name = scanner.nextLine();
+
+        System.out.print("CATS: ");
+        int CATS = scanner.nextInt();
+        scanner = new Scanner(System.in);
+
+        System.out.print("Lecturers (comma separated): ");
+        String lecturersStr = scanner.nextLine();
+        String[] lecturers = lecturersStr.split(",");
+
+        System.out.print("Description: ");
+        String description = scanner.nextLine();
+
+        System.out.print("How many assessments are there in this module? ");
+        int numAssessments = scanner.nextInt();
+        scanner = new Scanner(System.in);
+
+        Assessment[] assessments = new Assessment[numAssessments];
+        for (int assessmentNum = 0; assessmentNum < numAssessments; assessmentNum++) {
+            assessments[assessmentNum] = inputAssessment(scanner, assessmentNum + 1, name);
+            scanner = new Scanner(System.in);
+        }
+
+        return new Module(name, CATS, lecturers, description, assessments);
+    }
+
+    private static Year inputYear(Scanner scanner, int yearNum) {
+
+        System.out.println(System.lineSeparator() + "YEAR " + String.valueOf(yearNum) + ":");
+
+        System.out.print("Personal Tutor: ");
+        String personalTutor = scanner.nextLine();
+
+        System.out.print("Weight (proportion of the course this year is worth, between 0 and 1): ");
+        float weight = scanner.nextFloat();
+        scanner = new Scanner(System.in);
+
+        System.out.print("How many modules are you taking this year? ");
+        int numModules = scanner.nextInt();
+        scanner = new Scanner(System.in);
+
+        Module[] modules = new Module[numModules];
+        for (int moduleNum = 0; moduleNum < numModules; moduleNum++) {
+            modules[moduleNum] = inputModule(scanner, moduleNum + 1, yearNum);
+            scanner = new Scanner(System.in);
+        }
+
+        return new Year(yearNum, personalTutor, weight, modules);
+    }
+
+    public static Course inputCourse(Scanner scanner) {
         System.out.print("Course name: ");
         String name = scanner.nextLine();
 
@@ -22,10 +100,12 @@ public class Input {
 
         System.out.print("How many years does the course last? ");
         int numYears = scanner.nextInt();
+        scanner = new Scanner(System.in);
 
         Year[] years = new Year[numYears];
         for (int yearNum = 0; yearNum < numYears; yearNum++) {
             years[yearNum] = inputYear(scanner, yearNum + 1);
+            scanner = new Scanner(System.in);
         }
 
         return new Course(name, description, years);
@@ -35,16 +115,21 @@ public class Input {
         System.out.println("Average mark: " + course.getMarkAverageStr());
     }
 
+    private static void viewAssessment(Assessment assessment) {
+        System.out.println("Average mark: " + assessment.getMarkStr());
+    }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        Course course = inputCourse(scanner);
+        // Course course = inputCourse(scanner);
+        Assessment assessment = new Assessment("", 1f, "", 1f); //inputAssessment(scanner);
 
         // choose what want to do
-        System.out.println("What do you want to do?\n1) View course");
+        System.out.println("What do you want to do?\n1) View assessment");
         switch (scanner.nextInt()) {
             case 1:
-                viewCourse(course);
+                viewAssessment(assessment);
                 break;
             default:
                 System.out.println("Invalid option");
