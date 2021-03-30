@@ -18,20 +18,19 @@ public class Input {
 
         System.out.print("Weight relative to module (between 0 and 1): ");
         float weightOfModule = scanner.nextFloat();
-        scanner = new Scanner(System.in);
+        scanner.nextLine();
 
         System.out.println("Notes:");
         String notes = scanner.nextLine();
 
-        Float mark;
+        Float mark = null;
         System.out.print("Do you already know the mark? ");
         if (scanner.nextBoolean()) {
-            scanner = new Scanner(System.in);
+            scanner.nextLine();
             System.out.print("Mark (between 0 and 1): ");
             mark = scanner.nextFloat();
-        } else {
-            mark = null;
         }
+        scanner.nextLine();
 
         return new Assessment(name, weightOfModule, notes, mark);
     }
@@ -45,7 +44,7 @@ public class Input {
 
         System.out.print("CATS: ");
         int CATS = scanner.nextInt();
-        scanner = new Scanner(System.in);
+        scanner.nextLine();
 
         System.out.print("Lecturers (comma separated): ");
         String lecturersStr = scanner.nextLine();
@@ -56,12 +55,11 @@ public class Input {
 
         System.out.print("How many assessments are there in this module? ");
         int numAssessments = scanner.nextInt();
-        scanner = new Scanner(System.in);
+        scanner.nextLine();
 
         Assessment[] assessments = new Assessment[numAssessments];
         for (int assessmentNum = 0; assessmentNum < numAssessments; assessmentNum++) {
             assessments[assessmentNum] = inputAssessment(scanner, assessmentNum + 1, name);
-            scanner = new Scanner(System.in);
         }
 
         return new Module(name, CATS, lecturers, description, assessments);
@@ -76,16 +74,15 @@ public class Input {
 
         System.out.print("Weight (proportion of the course this year is worth, between 0 and 1): ");
         float weight = scanner.nextFloat();
-        scanner = new Scanner(System.in);
+        scanner.nextLine();
 
         System.out.print("How many modules are you taking this year? ");
         int numModules = scanner.nextInt();
-        scanner = new Scanner(System.in);
+        scanner.nextLine();
 
         Module[] modules = new Module[numModules];
         for (int moduleNum = 0; moduleNum < numModules; moduleNum++) {
             modules[moduleNum] = inputModule(scanner, moduleNum + 1, yearNum);
-            scanner = new Scanner(System.in);
         }
 
         return new Year(yearNum, personalTutor, weight, modules);
@@ -100,12 +97,11 @@ public class Input {
 
         System.out.print("How many years does the course last? ");
         int numYears = scanner.nextInt();
-        scanner = new Scanner(System.in);
+        scanner.nextLine();
 
         Year[] years = new Year[numYears];
         for (int yearNum = 0; yearNum < numYears; yearNum++) {
             years[yearNum] = inputYear(scanner, yearNum + 1);
-            scanner = new Scanner(System.in);
         }
 
         return new Course(name, description, years);
@@ -127,7 +123,11 @@ public class Input {
 
         // choose what want to do
         System.out.println("What do you want to do?\n1) View assessment");
-        switch (scanner.nextInt()) {
+
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        switch (choice) {
             case 1:
                 viewAssessment(assessment);
                 break;
