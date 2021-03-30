@@ -10,11 +10,11 @@ import jamesw1892.marks.core.GradeBoundary;
 
 public class Input2Excel {
     public static void main(String[] args) throws IOException {
-        Scanner scanner = new Scanner(System.in);
-        Course course = Input.inputCourse(scanner);
 
-        System.out.print("Filename to write the course to (without .xlsx): ");
-        scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
+        Course course = Input.inputCourse(scanner, true);
+
+        System.out.print(System.lineSeparator() + "Filename to write the course to (without .xlsx): ");
         String filename = scanner.nextLine() + ".xlsx";
 
         GradeBoundary uniGradeBoundary = new GradeBoundary(

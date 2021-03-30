@@ -9,7 +9,7 @@ import jamesw1892.marks.core.Assessment;
 
 public class Input {
 
-    private static Assessment inputAssessment(Scanner scanner, int assessmentNum, String moduleName) {
+    private static Assessment inputAssessment(Scanner scanner, int assessmentNum, String moduleName, boolean fast) {
 
         System.out.println(String.format("%sASSESSMENT %d in year %s:", System.lineSeparator(), assessmentNum, moduleName));
 
@@ -20,22 +20,26 @@ public class Input {
         float weightOfModule = scanner.nextFloat();
         scanner.nextLine();
 
-        System.out.println("Notes:");
-        String notes = scanner.nextLine();
-
+        String notes = "";
         Float mark = null;
-        System.out.print("Do you already know the mark? ");
-        if (scanner.nextBoolean()) {
+
+        if (!fast) {
+            System.out.println("Notes:");
+            notes = scanner.nextLine();
+
+            System.out.print("Do you already know the mark? ");
+            if (scanner.nextBoolean()) {
+                scanner.nextLine();
+                System.out.print("Mark (between 0 and 1): ");
+                mark = scanner.nextFloat();
+            }
             scanner.nextLine();
-            System.out.print("Mark (between 0 and 1): ");
-            mark = scanner.nextFloat();
         }
-        scanner.nextLine();
 
         return new Assessment(name, weightOfModule, notes, mark);
     }
 
-    private static Module inputModule(Scanner scanner, int moduleNum, int yearNum) {
+    private static Module inputModule(Scanner scanner, int moduleNum, int yearNum, boolean fast) {
 
         System.out.println(String.format("%sMODULE %d in year %d:", System.lineSeparator(), moduleNum, yearNum));
 
@@ -46,12 +50,17 @@ public class Input {
         int CATS = scanner.nextInt();
         scanner.nextLine();
 
-        System.out.print("Lecturers (comma separated): ");
-        String lecturersStr = scanner.nextLine();
-        String[] lecturers = lecturersStr.split(",");
+        String[] lecturers = new String[0];
+        String description = "";
 
-        System.out.print("Description: ");
-        String description = scanner.nextLine();
+        if (!fast) {
+            System.out.print("Lecturers (comma separated): ");
+            String lecturersStr = scanner.nextLine();
+            lecturers = lecturersStr.split(",");
+
+            System.out.print("Description: ");
+            description = scanner.nextLine();
+        }
 
         System.out.print("How many assessments are there in this module? ");
         int numAssessments = scanner.nextInt();
@@ -59,18 +68,21 @@ public class Input {
 
         Assessment[] assessments = new Assessment[numAssessments];
         for (int assessmentNum = 0; assessmentNum < numAssessments; assessmentNum++) {
-            assessments[assessmentNum] = inputAssessment(scanner, assessmentNum + 1, name);
+            assessments[assessmentNum] = inputAssessment(scanner, assessmentNum + 1, name, fast);
         }
 
         return new Module(name, CATS, lecturers, description, assessments);
     }
 
-    private static Year inputYear(Scanner scanner, int yearNum) {
+    private static Year inputYear(Scanner scanner, int yearNum, boolean fast) {
 
         System.out.println(System.lineSeparator() + "YEAR " + String.valueOf(yearNum) + ":");
 
-        System.out.print("Personal Tutor: ");
-        String personalTutor = scanner.nextLine();
+        String personalTutor = "";
+        if (!fast) {
+            System.out.print("Personal Tutor: ");
+            personalTutor = scanner.nextLine();
+        }
 
         System.out.print("Weight (proportion of the course this year is worth, between 0 and 1): ");
         float weight = scanner.nextFloat();
@@ -82,18 +94,30 @@ public class Input {
 
         Module[] modules = new Module[numModules];
         for (int moduleNum = 0; moduleNum < numModules; moduleNum++) {
-            modules[moduleNum] = inputModule(scanner, moduleNum + 1, yearNum);
+            modules[moduleNum] = inputModule(scanner, moduleNum + 1, yearNum, fast);
         }
 
         return new Year(yearNum, personalTutor, weight, modules);
     }
 
-    public static Course inputCourse(Scanner scanner) {
-        System.out.print("Course name: ");
-        String name = scanner.nextLine();
+    /**
+     * 
+     * @param scanner
+     * @param fast      Whether to only input the necessary information and leave out
+     * descriptions, notes and marks
+     * @return
+     */
+    public static Course inputCourse(Scanner scanner, boolean fast) {
+        String name = "";
+        String description = "";
 
-        System.out.println("Course description:");
-        String description = scanner.nextLine();
+        if (!fast) {
+            System.out.print("Course name: ");
+            name = scanner.nextLine();
+
+            System.out.println("Course description:");
+            if (!fast) description = scanner.nextLine();
+        }
 
         System.out.print("How many years does the course last? ");
         int numYears = scanner.nextInt();
@@ -101,7 +125,7 @@ public class Input {
 
         Year[] years = new Year[numYears];
         for (int yearNum = 0; yearNum < numYears; yearNum++) {
-            years[yearNum] = inputYear(scanner, yearNum + 1);
+            years[yearNum] = inputYear(scanner, yearNum + 1, fast);
         }
 
         return new Course(name, description, years);
