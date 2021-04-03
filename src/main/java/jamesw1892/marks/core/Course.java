@@ -3,11 +3,13 @@ package jamesw1892.marks.core;
 public class Course {
     private String name;
     private String description;
+    private String targetGrade;
     private Year[] years;
 
-    public Course(String name, String description, Year[] years) {
+    public Course(String name, String description, String targetGrade, Year[] years) {
         this.setName(name);
         this.setDescription(description);
+        this.setTargetGrade(targetGrade);
         this.setYears(years);
     }
 
@@ -17,6 +19,10 @@ public class Course {
 
     public String getDescription() {
         return this.description;
+    }
+
+    public String getTargetGrade() {
+        return this.targetGrade;
     }
 
     public Year[] getYears() {
@@ -29,6 +35,10 @@ public class Course {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void setTargetGrade(String targetGrade) {
+        this.targetGrade = targetGrade;
     }
 
     public void setYears(Year[] years) {

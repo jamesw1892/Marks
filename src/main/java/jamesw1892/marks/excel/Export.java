@@ -41,7 +41,15 @@ public class Export {
 
         XSSFRow row4 = sheet.createRow((short) 4);
         row4.createCell(0).setCellValue("Grade");
-        row4.createCell(1).setCellFormula(getGradeFormula(cellMark));
+        row4.createCell(1).setCellFormula(getGradeFormula(addr(cellMark)));
+
+        XSSFRow row5 = sheet.createRow((short) 5);
+        row5.createCell(0).setCellValue("Target Grade");
+        row5.createCell(1).setCellValue(course.getTargetGrade());
+
+        XSSFRow row6 = sheet.createRow((short) 6);
+        row6.createCell(0).setCellValue("Target Mark");
+        row6.createCell(1).setCellFormula("XLOOKUP(B6, 'Grade Boundaries'!A:A, 'Grade Boundaries'!B:B, -1)");
     }
 
     private static void createSheetYears(Course course, XSSFWorkbook workbook) {
@@ -79,7 +87,7 @@ public class Export {
 
             XSSFCell cellMark = row.createCell(5);
 
-            row.createCell(6).setCellFormula(getGradeFormula(cellMark));
+            row.createCell(6).setCellFormula(getGradeFormula(addr(cellMark)));
 
             // sum of weighted marks (column L in modules) where the year is this one
             XSSFCell cellMarkCurrent = row.createCell(7);
@@ -105,11 +113,12 @@ public class Export {
         heading.createCell(4).setCellValue("Complete");
         heading.createCell(5).setCellValue("Mark");
         heading.createCell(6).setCellValue("Grade");
-        heading.createCell(7).setCellValue("Lecturers");
-        heading.createCell(8).setCellValue("Description");
-        heading.createCell(9).setCellValue("Mark Current");
-        heading.createCell(10).setCellValue("Weight done so far");
-        heading.createCell(11).setCellValue("Weighted Mark");
+        heading.createCell(7).setCellValue("Average Mark Needed On Remaining Assessment To Get Target Grade");
+        heading.createCell(8).setCellValue("Lecturers");
+        heading.createCell(9).setCellValue("Description");
+        heading.createCell(10).setCellValue("Mark Current");
+        heading.createCell(11).setCellValue("Weight done so far");
+        heading.createCell(12).setCellValue("Weighted Mark");
 
         short i = 1;
         for (Year year: course.getYears()) {
@@ -133,16 +142,17 @@ public class Export {
 
                 XSSFCell cellMark = row.createCell(5);
 
-                row.createCell(6).setCellFormula(getGradeFormula(cellMark));
-                row.createCell(7).setCellValue(String.join(", ", module.getLecturers()));
-                row.createCell(8).setCellValue(module.getDescription());
+                row.createCell(6).setCellFormula(getGradeFormula(addr(cellMark)));
+                row.createCell(7).setCellFormula(getNeededFormula(addr(cellComplete), addr(cellMark)));
+                row.createCell(8).setCellValue(String.join(", ", module.getLecturers()));
+                row.createCell(9).setCellValue(module.getDescription());
 
                 // sum of weighted marks (column H in assessments) where the module is this one
-                XSSFCell cellMarkCurrent = row.createCell(9);
+                XSSFCell cellMarkCurrent = row.createCell(10);
                 cellMarkCurrent.setCellFormula(String.format("SUMIF(Assessments!B:B, %s, Assessments!H:H)", addr(cellName)));
 
-                row.createCell(10).setCellFormula(String.format("%s * %s", addr(cellComplete), addr(cellWeight)));
-                row.createCell(11).setCellFormula(String.format("%s * %s", addr(cellMarkCurrent), addr(cellWeight)));
+                row.createCell(11).setCellFormula(String.format("%s * %s", addr(cellComplete), addr(cellWeight)));
+                row.createCell(12).setCellFormula(String.format("%s * %s", addr(cellMarkCurrent), addr(cellWeight)));
 
                 cellMark.setCellFormula(String.format("IF(%s = 0, \"\", %s / %s)", addr(cellComplete), addr(cellMarkCurrent), addr(cellComplete)));
 
@@ -152,13 +162,26 @@ public class Export {
     }
 
     /**
+     * Return the formula to calculate the average mark needed on remaining
+     * assessments to achieve the target grade.
+     * @param complete  Reference to the cell containing the percentage complete
+     * @param mark      Reference to the cell containing the average mark
+     */
+    private static String getNeededFormula(String complete, String mark) {
+        String targetMark = "Course!$B$7";
+        return String.format(
+            "IF(%s = -1, \"Invalid Target Grade\", IF(%s = 0, %s, IF(%s = 1, \"\", MAX(0, (%s - %s * %s) / (1 - %s)))))",
+            targetMark, complete, targetMark, complete, targetMark, complete, mark, complete
+        );
+    }
+
+    /**
      * Return the formula to calculate the grade of the mark in the given cell
      * 
      * Should work with any order of grade boundaries in the grade boundaries tab
      */
-    private static String getGradeFormula(XSSFCell cell) {
+    private static String getGradeFormula(String address) {
         String gb = "'Grade Boundaries'!$";
-        String address = addr(cell);
         return String.format("IF(%s = \"\", \"\", XLOOKUP(MAXIFS(%sB:B, %sB:B, \"<=\" & %s), %sB:B, %sA:A))", address, gb, gb, address, gb, gb);
     }
 
@@ -198,7 +221,7 @@ public class Export {
                     if (assessment.getMark() != null) {
                         markCell.setCellValue(assessment.getMark());
                     }
-                    row.createCell(5).setCellFormula(getGradeFormula(markCell));
+                    row.createCell(5).setCellFormula(getGradeFormula(addr(markCell)));
                     row.createCell(6).setCellValue(assessment.getNotes());
                     row.createCell(7).setCellFormula(addr(markCell) + "*" + addr(weightCell));
                     row.createCell(8).setCellFormula("IF(" + addr(markCell) + "=\"\",0," + addr(weightCell) + ")");

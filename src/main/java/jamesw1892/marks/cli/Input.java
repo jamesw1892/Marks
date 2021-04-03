@@ -119,6 +119,9 @@ public class Input {
             if (!fast) description = scanner.nextLine();
         }
 
+        System.out.print("Target grade: ");
+        String targetGrade = scanner.nextLine();
+
         System.out.print("How many years does the course last? ");
         int numYears = scanner.nextInt();
         scanner.nextLine();
@@ -128,7 +131,7 @@ public class Input {
             years[yearNum] = inputYear(scanner, yearNum + 1, fast);
         }
 
-        return new Course(name, description, years);
+        return new Course(name, description, targetGrade, years);
     }
 
     private static void viewCourse(Course course) {
