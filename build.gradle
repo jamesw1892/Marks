@@ -1,7 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
-// mainClassName = 'jamesw1892.marks.excel.HardCodedExample'
 mainClassName = 'jamesw1892.marks.excel.Input2Excel'
 
 repositories {
@@ -16,6 +15,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 }
 
-run { // run with `gradle --console plain run -q`
+run {
     standardInput = System.in
 }
